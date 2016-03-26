@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Faker\Generator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
-use Illuminate\Database\ConnectionInterface;
-use PDOException;
+use PDO;
 
 /**
  * Class SeedOrganisationsCommand
@@ -24,7 +25,7 @@ class SeedOrganisationsCommand extends Command
      */
     protected $description = 'Seeds fake organisations';
     /**
-     * @var ConnectionInterface
+     * @var Connection
      */
     private $db;
     /**
@@ -34,16 +35,15 @@ class SeedOrganisationsCommand extends Command
 
     /**
      * SeedOrganisationsCommand constructor.
-     * @param ConnectionInterface $db
+     * @param Connection $db
      * @param Generator $faker
      */
-    public function __construct(ConnectionInterface $db, Generator $faker)
+    public function __construct(Connection $db, Generator $faker)
     {
         parent::__construct();
         $this->db = $db;
         $this->faker = $faker;
     }
-
 
     /**
      *
@@ -51,28 +51,29 @@ class SeedOrganisationsCommand extends Command
     public function handle()
     {
         $count = (int)$this->argument('count');
-        $bar = $this->output->createProgressBar($count);
-
         for ($i = 0; $i < $count; $i++) {
             try {
                 $this->seedOrganisation();
-            } catch (PDOException $e) {
-//                $this->error($e->getMessage());
+            } catch (DBALException $e) {
+                $this->error($e->getMessage());
             }
-            $bar->advance();
         }
-        $bar->finish();
     }
 
     /**
-     *
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function seedOrganisation()
     {
         $title = $this->faker->company . ' ' . $this->faker->companySuffix . ', ' . $this->faker->city;
         $title .= ', ' . mt_rand(1, 99999);
-        $this->db->insert('INSERT INTO `organisations` (`title`) VALUES (:title);', ['title' => $title]);
-        $id = $this->db->selectOne('SELECT id FROM organisations WHERE title = :title;', ['title' => $title])->id;
+
+        $this->db->executeQuery(
+            'INSERT INTO `organisations` (`title`) VALUES (:title);',
+            ['title' => $title],
+            [\PDO::PARAM_STR]
+        );
+        $id = (int)$this->db->lastInsertId();
 
         if (mt_rand(1, 100) === 1) {
             return;
@@ -80,10 +81,13 @@ class SeedOrganisationsCommand extends Command
 
         for ($n = mt_rand(1, 3); $n >= 0; $n--) {
             $parent_id = mt_rand(1, max(2, round($id / 20)));
-            $this->db->insert(
+            $this->db->executeQuery(
                 'INSERT INTO `relations` (`organisation_id`, `parent_id`) VALUES (:id, :parent_id);',
-                ['id' => $id, 'parent_id' => $parent_id]
+                ['id' => $id, 'parent_id' => $parent_id],
+                [\PDO::PARAM_INT, \PDO::PARAM_INT]
             );
         }
+
+        $this->info($title);
     }
 }

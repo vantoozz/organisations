@@ -52,7 +52,7 @@ $app->singleton(
 |
 */
 
-$app->register(\App\ServiceProviders\DbConnectionServiceProvider::class);
+$app->register(\App\ServiceProviders\DBALConnectionServiceProvider::class);
 $app->register(\App\ServiceProviders\FakerServiceProvider::class);
 
 

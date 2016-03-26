@@ -2,14 +2,14 @@
 
 namespace App\ServiceProviders;
 
-use Illuminate\Database\ConnectionInterface;
+use Doctrine\DBAL\Connection;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Class DbConnectionServiceProvider
  * @package App\Providers
  */
-class DbConnectionServiceProvider extends ServiceProvider
+class DBALConnectionServiceProvider extends ServiceProvider
 {
     /**
      * @var bool
@@ -21,7 +21,7 @@ class DbConnectionServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [ConnectionInterface::class];
+        return [Connection::class];
     }
 
     /**
@@ -30,8 +30,10 @@ class DbConnectionServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(ConnectionInterface::class, function () {
-            return $this->app->make('db')->connection();
+        $this->app->singleton(Connection::class, function () {
+            /** @var \Illuminate\Database\Connection $connection */
+            $connection = $this->app->make('db')->connection();
+            return $connection->getDoctrineConnection();
         });
     }
 }

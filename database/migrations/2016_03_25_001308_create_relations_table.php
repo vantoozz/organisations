@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateRelationsTable extends Migration
 {
@@ -18,11 +18,11 @@ class CreateRelationsTable extends Migration
                 $table->unsignedInteger('organisation_id')->nullable();
                 $table->unsignedInteger('parent_id')->nullable();
                 $table->unique(['organisation_id', 'parent_id']);
-                $table->foreign('organisation_id')
+                $table->foreign('organisation_id', 'organisation_id_fk')
                     ->references('id')->on('organisations')
                     ->onUpdate('cascade')
                     ->onDelete('set null');
-                $table->foreign('parent_id')
+                $table->foreign('parent_id', 'parent_id_fk')
                     ->references('id')->on('organisations')
                     ->onUpdate('cascade')
                     ->onDelete('set null');

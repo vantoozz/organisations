@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Collections\OrganisationsCollection;
+use App\Exceptions\InvalidArgumentException;
+use App\Organisation;
+use App\Repositories\Organisations\OrganisationsRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Faker\Generator;
@@ -15,10 +19,11 @@ use PDO;
  */
 class SeedOrganisationsCommand extends Command
 {
+    const BUFFER_SIZE = 1000;
     /**
      * @var string
      */
-    protected $signature = 'organisations:seed {count=1000 : Count of organisations to seed}';
+    protected $signature = 'organisations:seed {count=100000 : Count of organisations to seed}';
 
     /**
      * @var string
@@ -28,66 +33,126 @@ class SeedOrganisationsCommand extends Command
      * @var Connection
      */
     private $db;
+
     /**
      * @var Generator
      */
     private $faker;
 
     /**
+     * @var int
+     */
+    private $maxId = 0;
+    /**
+     * @var OrganisationsRepositoryInterface
+     */
+    private $repository;
+
+    /**
      * SeedOrganisationsCommand constructor.
      * @param Connection $db
      * @param Generator $faker
+     * @param OrganisationsRepositoryInterface $repository
      */
-    public function __construct(Connection $db, Generator $faker)
+    public function __construct(Connection $db, Generator $faker, OrganisationsRepositoryInterface $repository)
     {
         parent::__construct();
         $this->db = $db;
         $this->faker = $faker;
+        $this->repository = $repository;
     }
 
     /**
-     *
+     * @throws InvalidArgumentException
      */
     public function handle()
     {
+
+        $collection = new OrganisationsCollection();
         $count = (int)$this->argument('count');
-        for ($i = 0; $i < $count; $i++) {
-            try {
-                $this->seedOrganisation();
-            } catch (DBALException $e) {
-                $this->error($e->getMessage());
+        $this->maxId = $this->getMaxId();
+
+        $bufferSize = ceil(self::BUFFER_SIZE / 50);
+
+        while (--$count >= 0) {
+            $collection->push($this->createOrganisation());
+            if ($bufferSize <= $collection->count()) {
+                $collection = $this->flushCollection($collection);
+                $bufferSize = self::BUFFER_SIZE;
             }
         }
     }
 
     /**
-     * @throws \Doctrine\DBAL\DBALException
+     * @return Organisation
      */
-    private function seedOrganisation()
+    private function createOrganisation()
     {
         $title = $this->faker->company . ' ' . $this->faker->companySuffix . ', ' . $this->faker->city;
         $title .= ', ' . mt_rand(1, 99999);
 
-        $this->db->executeQuery(
-            'INSERT INTO `organisations` (`title`) VALUES (:title);',
-            ['title' => $title],
-            [\PDO::PARAM_STR]
-        );
-        $id = (int)$this->db->lastInsertId();
+        $organisation = new Organisation($title);
 
-        if (mt_rand(1, 100) === 1) {
+        foreach ([95, 60, 33, 5, 2] as $chance) {
+            if (mt_rand(1, 100) >= $chance) {
+                break;
+            }
+            /** @noinspection DisconnectedForeachInstructionInspection */
+            $this->addParent($organisation);
+        }
+
+        return $organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     */
+    private function addParent(Organisation $organisation)
+    {
+        try {
+            $title = $this->db->executeQuery(
+                'SELECT `title` FROM `organisations` WHERE id >= :id LIMIT 1',
+                [mt_rand(0, (int)(0.2 * $this->maxId))],
+                [\PDO::PARAM_INT]
+            )->fetchColumn();
+        } catch (DBALException $e) {
+            $this->error($e->getMessage());
             return;
         }
 
-        for ($n = mt_rand(1, 3); $n >= 0; $n--) {
-            $parent_id = mt_rand(1, max(2, round($id / 20)));
-            $this->db->executeQuery(
-                'INSERT INTO `relations` (`organisation_id`, `parent_id`) VALUES (:id, :parent_id);',
-                ['id' => $id, 'parent_id' => $parent_id],
-                [\PDO::PARAM_INT, \PDO::PARAM_INT]
-            );
+        if (false === $title) {
+            return;
         }
 
-        $this->info($title);
+        try {
+            $organisation->addParent(new Organisation($title));
+        } catch (InvalidArgumentException $e) {
+            $this->error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param OrganisationsCollection $collection
+     * @return OrganisationsCollection
+     */
+    private function flushCollection(OrganisationsCollection $collection)
+    {
+        $this->repository->store($collection);
+        $this->maxId = $this->getMaxId();
+        return new OrganisationsCollection();
+    }
+
+    /**
+     * @return int
+     */
+    private function getMaxId()
+    {
+        try {
+            $id = (int)$this->db->executeQuery('SELECT max(`id`) FROM `organisations`;')->fetchColumn();
+        } catch (DBALException $e) {
+            $this->error($e->getMessage());
+            $id = 0;
+        }
+        return $id;
     }
 }

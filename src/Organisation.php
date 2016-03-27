@@ -2,22 +2,24 @@
 
 namespace App;
 
+use App\Collections\OrganisationsCollection;
+use App\Exceptions\InvalidArgumentException;
+
 /**
  * Class Organisation
  * @package App
  */
 class Organisation
 {
-
     /**
      * @var string
      */
     protected $title;
 
     /**
-     * @var int
+     * @var OrganisationsCollection
      */
-    protected $id;
+    protected $parents;
 
     /**
      * Organisation constructor.
@@ -26,6 +28,7 @@ class Organisation
     public function __construct($title)
     {
         $this->title = (string)$title;
+        $this->parents = new OrganisationsCollection();
     }
 
     /**
@@ -37,18 +40,19 @@ class Organisation
     }
 
     /**
-     * @return int
+     * @param Organisation $parent
+     * @throws InvalidArgumentException
      */
-    public function getId()
+    public function addParent(Organisation $parent)
     {
-        return $this->id;
+        $this->parents->push($parent);
     }
 
     /**
-     * @param int $id
+     * @return OrganisationsCollection
      */
-    public function setId($id)
+    public function getParents()
     {
-        $this->id = (int)$id;
+        return $this->parents;
     }
 }

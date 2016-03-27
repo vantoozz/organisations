@@ -15,4 +15,9 @@ interface OrganisationsRepositoryInterface
      * @param OrganisationsCollection $organisations
      */
     public function store(OrganisationsCollection $organisations);
+
+    /**
+     *
+     */
+    public function deleteAll();
 }

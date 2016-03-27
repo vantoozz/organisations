@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Hydrators\OrganisationsCollection\JsonOrganisationsCollectionHydrator;
 use App\Repositories\Organisations\OrganisationsRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
@@ -11,12 +10,13 @@ use Illuminate\Contracts\Config;
  * Class CreateOrganisationsCommand
  * @package App\Console\Commands
  */
-class CreateOrganisationsCommand extends Command
+class DeleteAllOrganisationsCommand extends Command
 {
+    const BUFFER_SIZE = 1000;
     /**
      * @var string
      */
-    protected $signature = 'organisations:create {json : JSON encoded data}';
+    protected $signature = 'organisations:delete-all';
 
     /**
      * @var string
@@ -25,14 +25,19 @@ class CreateOrganisationsCommand extends Command
 
     /**
      * @param OrganisationsRepositoryInterface $repository
-     * @param JsonOrganisationsCollectionHydrator $hydrator
      * @throws \App\Exceptions\InvalidArgumentException
      */
-    public function handle(OrganisationsRepositoryInterface $repository, JsonOrganisationsCollectionHydrator $hydrator)
+    public function handle(OrganisationsRepositoryInterface $repository)
     {
-        $json = $this->argument('json');
-        $collection = $hydrator->hydrate($json);
-        $repository->store($collection);
+
+        if (!$this->confirm('Delete all organisations?')) {
+            $this->info('Nothing done');
+
+            return;
+        }
+
+        $repository->deleteAll();
+        
         $this->info('All done');
     }
 }

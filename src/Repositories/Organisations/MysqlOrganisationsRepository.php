@@ -13,6 +13,17 @@ use Doctrine\DBAL\DBALException;
 class MysqlOrganisationsRepository extends DatabaseOrganisationsRepository
 {
     /**
+     * @throws DBALException
+     */
+    public function deleteAll()
+    {
+        $this->db->exec('SET foreign_key_checks=0;');
+        $this->db->exec('TRUNCATE `relations`;');
+        $this->db->exec('TRUNCATE `organisations`;');
+        $this->db->exec('SET foreign_key_checks=1;');
+    }
+
+    /**
      * @param OrganisationsCollection $organisations
      * @param array $ids
      * @throws DBALException

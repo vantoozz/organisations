@@ -103,4 +103,13 @@ class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterfac
             $stored[] = $parentId;
         }
     }
+
+    /**
+     * @throws DBALException
+     */
+    public function deleteAll()
+    {
+        $this->db->exec('TRUNCATE `relations`');
+        $this->db->exec('TRUNCATE `organisations`');
+    }
 }

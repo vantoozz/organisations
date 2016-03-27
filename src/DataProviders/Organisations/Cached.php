@@ -81,15 +81,25 @@ class Cached implements OrganisationsDataProviderInterface
     }
 
     /**
-     * @param string $title
+     * @param int $id
+     * @param int $limit
+     * @param int $offset
      * @return array
-     * @throws NotFoundException
      */
-    public function getOrganisationRelations($title)
+    public function getOrganisationRelations($id, $limit, $offset)
     {
-        return $this->provider->getOrganisationRelations($title);
+        return $this->provider->getOrganisationRelations($id, $limit, $offset);
     }
 
+    /**
+     * @param int $id
+     * @return int
+     */
+    public function getOrganisationRelationsCount($id)
+    {
+        return $this->provider->getOrganisationRelationsCount($id);
+    }
+    
     /**
      * @return mixed
      */
@@ -108,7 +118,7 @@ class Cached implements OrganisationsDataProviderInterface
     {
         $key = $this->makeKey(__METHOD__ . '_' . $title);
 
-        return $this->cache->remember($key, $this->ttl, function () use ($title) {
+        return (int)$this->cache->remember($key, $this->ttl, function () use ($title) {
             return $this->provider->getOrganisationId($title);
         });
     }

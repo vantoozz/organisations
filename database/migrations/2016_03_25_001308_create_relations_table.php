@@ -17,7 +17,7 @@ class CreateRelationsTable extends Migration
             function (Blueprint $table) {
                 $table->unsignedInteger('organisation_id')->nullable();
                 $table->unsignedInteger('parent_id')->nullable();
-                $table->unique(['organisation_id', 'parent_id']);
+                $table->unique(['organisation_id', 'parent_id'], 'organisation_parent_unq');
                 $table->foreign('organisation_id', 'organisation_id_fk')
                     ->references('id')->on('organisations')
                     ->onUpdate('cascade')

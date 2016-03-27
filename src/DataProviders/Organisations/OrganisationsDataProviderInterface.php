@@ -18,11 +18,18 @@ interface OrganisationsDataProviderInterface
     public function fetchIdsByTitles(array $titles);
 
     /**
-     * @param string $title
+     * @param int $id
+     * @param int $limit
+     * @param int $offset
      * @return array
-     * @throws NotFoundException
      */
-    public function getOrganisationRelations($title);
+    public function getOrganisationRelations($id, $limit, $offset);
+
+    /**
+     * @param int $id
+     * @return int
+     */
+    public function getOrganisationRelationsCount($id);
 
     /**
      * @param string $title

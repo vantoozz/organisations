@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\DataProviders\Organisations\OrganisationsDataProviderInterface;
+use App\Exceptions\NotFoundException;
+use App\Repositories\Relations\RelationsRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
 
@@ -23,14 +24,15 @@ class GetOrganisationRelationsCommand extends Command
      */
     protected $description = 'Get organisation relations';
 
+
     /**
-     * @param OrganisationsDataProviderInterface $dataProvider
-     * @throws \App\Exceptions\NotFoundException
+     * @param RelationsRepositoryInterface $repository
+     * @throws NotFoundException
      */
-    public function handle(OrganisationsDataProviderInterface $dataProvider)
+    public function handle(RelationsRepositoryInterface $repository)
     {
         $title = $this->argument('title');
 
-        $id = $dataProvider->getOrganisationId($title);
+        $data = $repository->getOrganisationRelations($title, 1);
     }
 }

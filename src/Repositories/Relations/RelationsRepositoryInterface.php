@@ -8,8 +8,9 @@ interface RelationsRepositoryInterface
 {
     /**
      * @param string $title
+     * @param int $page
      * @return array
      * @throws NotFoundException
      */
-    public function getOrganisationRelations($title);
+    public function getOrganisationRelations($title, $page);
 }

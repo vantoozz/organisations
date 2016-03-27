@@ -14,7 +14,6 @@ use Doctrine\DBAL\DBALException;
  */
 class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInterface
 {
-
     /**
      * @var Connection
      */
@@ -74,13 +73,56 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
     }
 
     /**
-     * @param string $title
+     * @param int $id
+     * @param int $limit
+     * @param int $offset
      * @return array
-     * @throws NotFoundException
+     * @throws \Doctrine\DBAL\DBALException
      */
-    public function getOrganisationRelations($title)
+    public function getOrganisationRelations($id, $limit, $offset)
     {
-        // TODO: Implement getOrganisationRelations() method.
+        return $this->db->executeQuery(
+            '
+              SELECT o.id, o.title, r.relation FROM(
+                SELECT r1.parent_id AS id , "parent" AS relation FROM relations r1 WHERE r1.organisation_id = :id
+                UNION 
+                SELECT r2.organisation_id AS id, "daughter" AS relation FROM relations r2 WHERE r2.parent_id = :id
+                UNION 
+                SELECT r3.organisation_id AS id, "sister" AS relation FROM relations r3 WHERE r3.parent_id IN (
+                  SELECT parent_id  FROM relations WHERE organisation_id = :id
+                ) AND r3.organisation_id <> :id
+              ) r
+              LEFT JOIN organisations o ON o.id = r.id
+              ORDER BY title
+              LIMIT :lmt
+              OFFSET :ofst
+            ;',
+            ['id' => $id, 'lmt' => $limit, 'ofst' => $offset],
+            [\PDO::PARAM_INT, \PDO::PARAM_INT, \PDO::PARAM_INT]
+        )->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getOrganisationRelationsCount($id)
+    {
+        $count = $this->db->executeQuery(
+            '
+          SELECT sum(cnt) FROM(
+            SELECT count(*) cnt  FROM relations r1 WHERE r1.organisation_id = :id OR r1.parent_id = :id 
+            UNION
+            SELECT count(DISTINCT organisation_id) cnt FROM relations r2 WHERE r2.parent_id IN (
+              SELECT parent_id  FROM relations WHERE organisation_id = :id
+            ) AND r2.organisation_id <> :id
+          ) t;',
+            ['id' => $id],
+            [\PDO::PARAM_INT]
+        )->fetchColumn(0);
+
+        return (int)$count;
     }
 
     /**

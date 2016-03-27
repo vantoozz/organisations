@@ -14,7 +14,7 @@ class OrganisationsRepositoryServiceProvider extends ServiceProvider
     /**
      * @var bool
      */
-    protected $defer = false;
+    protected $defer = true;
 
     /**
      * @return array

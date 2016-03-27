@@ -8,7 +8,7 @@ use App\Organisation;
 use App\Repositories\Organisations\OrganisationsRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
-use Faker\Generator;
+use Faker\Generator as FakerGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
 use PDO;
@@ -35,7 +35,7 @@ class SeedOrganisationsCommand extends Command
     private $db;
 
     /**
-     * @var Generator
+     * @var FakerGenerator
      */
     private $faker;
 
@@ -51,10 +51,10 @@ class SeedOrganisationsCommand extends Command
     /**
      * SeedOrganisationsCommand constructor.
      * @param Connection $db
-     * @param Generator $faker
+     * @param FakerGenerator $faker
      * @param OrganisationsRepositoryInterface $repository
      */
-    public function __construct(Connection $db, Generator $faker, OrganisationsRepositoryInterface $repository)
+    public function __construct(Connection $db, FakerGenerator $faker, OrganisationsRepositoryInterface $repository)
     {
         parent::__construct();
         $this->db = $db;

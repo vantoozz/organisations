@@ -11,7 +11,6 @@ use Doctrine\DBAL\DBALException;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
-use PDO;
 
 /**
  * Class SeedOrganisationsCommand
@@ -84,6 +83,20 @@ class SeedOrganisationsCommand extends Command
     }
 
     /**
+     * @return int
+     */
+    private function getMaxId()
+    {
+        try {
+            $id = (int)$this->db->executeQuery('SELECT max(`id`) FROM `organisations`;')->fetchColumn();
+        } catch (DBALException $e) {
+            $this->error($e->getMessage());
+            $id = 0;
+        }
+        return $id;
+    }
+
+    /**
      * @return Organisation
      */
     private function createOrganisation()
@@ -109,21 +122,7 @@ class SeedOrganisationsCommand extends Command
      */
     private function addParent(Organisation $organisation)
     {
-        try {
-            $title = $this->db->executeQuery(
-                'SELECT `title` FROM `organisations` WHERE id >= :id LIMIT 1',
-                [mt_rand(0, (int)(0.2 * $this->maxId))],
-                [\PDO::PARAM_INT]
-            )->fetchColumn();
-        } catch (DBALException $e) {
-            $this->error($e->getMessage());
-            return;
-        }
-
-        if (false === $title) {
-            return;
-        }
-
+        $title = 'Black Banana';
         try {
             $organisation->addParent(new Organisation($title));
         } catch (InvalidArgumentException $e) {
@@ -140,19 +139,5 @@ class SeedOrganisationsCommand extends Command
         $this->repository->store($collection);
         $this->maxId = $this->getMaxId();
         return new OrganisationsCollection();
-    }
-
-    /**
-     * @return int
-     */
-    private function getMaxId()
-    {
-        try {
-            $id = (int)$this->db->executeQuery('SELECT max(`id`) FROM `organisations`;')->fetchColumn();
-        } catch (DBALException $e) {
-            $this->error($e->getMessage());
-            $id = 0;
-        }
-        return $id;
     }
 }

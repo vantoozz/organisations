@@ -2,9 +2,6 @@
 
 namespace App\Repositories\Organisations;
 
-use App\DataProviders\Organisations\OrganisationsDataProviderInterface;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Illuminate\Contracts\Cache;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,17 +30,9 @@ class OrganisationsRepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(OrganisationsRepositoryInterface::class, function () {
-            /** @var Connection $connection */
-            $connection = $this->app->make(Connection::class);
-            /** @var OrganisationsDataProviderInterface $dataProvider */
-            $dataProvider = $this->app->make(OrganisationsDataProviderInterface::class);
-
-            if ($connection->getDriver() instanceof AbstractMySQLDriver) {
-                return new MysqlOrganisationsRepository($connection, $dataProvider);
-            }
-            
-            return new DatabaseOrganisationsRepository($connection, $dataProvider);
-        });
+        $this->app->singleton(
+            OrganisationsRepositoryInterface::class,
+            DatabaseOrganisationsRepository::class
+        );
     }
 }

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CreateOrganisationsCommand;
 use App\Console\Commands\DeleteAllOrganisationsCommand;
+use App\Console\Commands\GetOrganisationRelationsCommand;
 use App\Console\Commands\SeedOrganisationsCommand;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -23,5 +24,6 @@ class Kernel extends ConsoleKernel
         SeedOrganisationsCommand::class,
         CreateOrganisationsCommand::class,
         DeleteAllOrganisationsCommand::class,
+        GetOrganisationRelationsCommand::class,
     ];
 }

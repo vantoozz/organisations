@@ -2,6 +2,8 @@
 
 namespace App\DataProviders\Organisations;
 
+use App\Collections\OrganisationsCollection;
+use App\Exceptions\NotFoundException;
 use Illuminate\Contracts\Cache\Repository;
 
 /**
@@ -49,7 +51,7 @@ class Cached implements OrganisationsDataProviderInterface
         $data = [];
         $notCached = [];
         foreach ($titles as $title) {
-            $key = $this->makeKey($title);
+            $key = $this->makeKey(__METHOD__ . '_' . $title);
             if ($this->cache->has($key)) {
                 $data[$title] = $this->cache->get($key);
             }
@@ -61,7 +63,7 @@ class Cached implements OrganisationsDataProviderInterface
         }
 
         foreach ($this->provider->fetchIdsByTitles($notCached) as $title => $id) {
-            $key = $this->makeKey($title);
+            $key = $this->makeKey(__METHOD__ . '_' . $title);
             $this->cache->put($key, $id, $this->ttl);
             $data[$title] = $id;
         }
@@ -76,5 +78,47 @@ class Cached implements OrganisationsDataProviderInterface
     private function makeKey($title)
     {
         return self::CACHE_PREFIX . ':' . sha1($title);
+    }
+
+    /**
+     * @param string $title
+     * @return array
+     * @throws NotFoundException
+     */
+    public function getOrganisationRelations($title)
+    {
+        return $this->provider->getOrganisationRelations($title);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function deleteAll()
+    {
+        return $this->provider->deleteAll();
+    }
+
+
+    /**
+     * @param string $title
+     * @return int
+     * @throws NotFoundException
+     */
+    public function getOrganisationId($title)
+    {
+        $key = $this->makeKey(__METHOD__ . '_' . $title);
+
+        return $this->cache->remember($key, $this->ttl, function () use ($title) {
+            return $this->provider->getOrganisationId($title);
+        });
+    }
+
+    /**
+     * @param OrganisationsCollection $organisations
+     * @param array $ids
+     */
+    public function storeRelations(OrganisationsCollection $organisations, array $ids)
+    {
+        return $this->provider->storeRelations($organisations, $ids);
     }
 }

@@ -24,7 +24,6 @@ class GetOrganisationRelationsCommand extends Command
      */
     protected $description = 'Get organisation relations';
 
-
     /**
      * @param RelationsRepositoryInterface $repository
      * @throws NotFoundException

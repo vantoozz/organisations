@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Repositories\Relations;
 
 use App\DataProviders\Organisations\OrganisationsDataProviderInterface;

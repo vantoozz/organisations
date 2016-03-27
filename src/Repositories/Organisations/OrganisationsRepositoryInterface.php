@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Repositories\Organisations;
 
 use App\Collections\OrganisationsCollection;

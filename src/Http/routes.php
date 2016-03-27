@@ -10,6 +10,5 @@ $app->get(
     }
 );
 
-
 $app->get('/app/{provider}', 'App\Http\Controllers\CanvasController@index');
 $app->post('/app/{provider}', 'App\Http\Controllers\CanvasController@index');

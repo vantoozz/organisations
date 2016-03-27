@@ -108,7 +108,6 @@ class Cached implements OrganisationsDataProviderInterface
         return $this->provider->deleteAll();
     }
 
-
     /**
      * @param string $title
      * @return int

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Hydrators\OrganisationsCollection;
 
 use App\Collections\OrganisationsCollection;
@@ -40,8 +39,7 @@ class JsonOrganisationsCollectionHydrator implements HydratorInterface
         if (!is_array($data)) {
             throw new InvalidArgumentException('Bad input data. Error message: ' . json_last_error_msg());
         }
-
-
+        
         $collection = new OrganisationsCollection;
         $this->populateCollection($collection, $data);
         

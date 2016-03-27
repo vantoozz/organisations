@@ -43,7 +43,6 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
             [Connection::PARAM_STR_ARRAY]
         )->fetchAll(\PDO::FETCH_ASSOC);
 
-
         $titlesToStore = array_flip($titles);
         foreach ($result as $row) {
             $ids[$row['title']] = (int)$row['id'];

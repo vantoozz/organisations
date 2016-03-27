@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Class OrganisationsRepositoryServiceProvider
- * @package App\Repositories\Organisations
+ * @package App\Repositories\OrganisationsCollection
  */
 class OrganisationsRepositoryServiceProvider extends ServiceProvider
 {

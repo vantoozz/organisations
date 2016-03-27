@@ -4,7 +4,7 @@ namespace App\DataProviders\Organisations;
 
 /**
  * Interface OrganisationsDataProviderInterface
- * @package App\DataProviders\Organisations
+ * @package App\DataProviders\OrganisationsCollection
  */
 interface OrganisationsDataProviderInterface
 {

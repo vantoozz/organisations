@@ -6,7 +6,7 @@ use Illuminate\Contracts\Cache\Repository;
 
 /**
  * Class Cached
- * @package App\DataProviders\Organisations
+ * @package App\DataProviders\OrganisationsCollection
  */
 class Cached implements OrganisationsDataProviderInterface
 {

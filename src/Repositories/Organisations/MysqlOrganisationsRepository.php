@@ -8,7 +8,7 @@ use Doctrine\DBAL\DBALException;
 
 /**
  * Class MysqlOrganisationsRepository
- * @package App\Repositories\Organisations
+ * @package App\Repositories\OrganisationsCollection
  */
 class MysqlOrganisationsRepository extends DatabaseOrganisationsRepository
 {

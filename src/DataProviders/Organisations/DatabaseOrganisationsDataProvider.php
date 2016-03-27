@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 
 /**
  * Class DatabaseOrganisationsDataProvider
- * @package App\DataProviders\Organisations
+ * @package App\DataProviders\OrganisationsCollection
  */
 class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInterface
 {

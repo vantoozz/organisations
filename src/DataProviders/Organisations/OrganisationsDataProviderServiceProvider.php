@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Class OrganisationsDataProviderServiceProvider
- * @package App\DataProviders\Organisations
+ * @package App\DataProviders\OrganisationsCollection
  */
 class OrganisationsDataProviderServiceProvider extends ServiceProvider
 {

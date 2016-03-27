@@ -10,7 +10,7 @@ use Doctrine\DBAL\DBALException;
 
 /**
  * Class CommonDatabaseOrganisationsRepository
- * @package App\Repositories\Organisations
+ * @package App\Repositories\OrganisationsCollection
  */
 class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterface
 {

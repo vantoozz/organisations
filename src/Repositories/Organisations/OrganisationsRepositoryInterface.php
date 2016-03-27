@@ -7,7 +7,7 @@ use App\Collections\OrganisationsCollection;
 
 /**
  * Interface OrganisationsRepositoryInterface
- * @package App\Repositories\Organisations
+ * @package App\Repositories\OrganisationsCollection
  */
 interface OrganisationsRepositoryInterface
 {

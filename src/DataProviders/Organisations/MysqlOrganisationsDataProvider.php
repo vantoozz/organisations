@@ -4,7 +4,7 @@ namespace App\DataProviders\Organisations;
 
 /**
  * Class MysqlOrganisationsDataProvider
- * @package App\DataProviders\Organisations
+ * @package App\DataProviders\OrganisationsCollection
  */
 class MysqlOrganisationsDataProvider extends DatabaseOrganisationsDataProvider
 {

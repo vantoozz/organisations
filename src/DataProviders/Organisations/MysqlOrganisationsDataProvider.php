@@ -17,10 +17,11 @@ class MysqlOrganisationsDataProvider extends DatabaseOrganisationsDataProvider
      */
     public function deleteAll()
     {
+        $checkKeysStatus = $this->db->executeQuery('SHOW SESSION VARIABLES LIKE "foreign_key_checks";')->fetchColumn(1);
         $this->db->exec('SET foreign_key_checks=0;');
         $this->db->exec('TRUNCATE `relations`;');
         $this->db->exec('TRUNCATE `organisations`;');
-        $this->db->exec('SET foreign_key_checks=1;');
+        $this->db->executeQuery('SET foreign_key_checks=:status;', [$checkKeysStatus], [\PDO::PARAM_STR]);
     }
 
     /**

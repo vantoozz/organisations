@@ -26,6 +26,8 @@ class JsonOrganisationsCollectionHydrator implements HydratorInterface
         if (!$resource instanceof OrganisationsCollection) {
             throw new InvalidArgumentException('Resource must be an instance of OrganisationsCollection');
         }
+
+        return '';
     }
 
     /**

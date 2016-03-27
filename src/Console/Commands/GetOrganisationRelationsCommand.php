@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\NotFoundException;
-use App\Repositories\Relations\RelationsRepositoryInterface;
+use App\Hydrators\RelationsCollection\JsonRelationsCollectionHydrator;
+use App\Repositories\Organisations\OrganisationsRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
 
@@ -25,13 +25,17 @@ class GetOrganisationRelationsCommand extends Command
     protected $description = 'Get organisation relations';
 
     /**
-     * @param RelationsRepositoryInterface $repository
-     * @throws NotFoundException
+     * @param OrganisationsRepositoryInterface $repository
+     * @param JsonRelationsCollectionHydrator $hydrator
+     * @throws \App\Exceptions\NotFoundException
+     * @throws \App\Exceptions\InvalidArgumentException
      */
-    public function handle(RelationsRepositoryInterface $repository)
+    public function handle(OrganisationsRepositoryInterface $repository, JsonRelationsCollectionHydrator $hydrator)
     {
         $title = $this->argument('title');
 
-        $data = $repository->getOrganisationRelations($title, 1);
+        $relations = $repository->getRelationsByTitle($title, 1);
+
+        $this->info($hydrator->extract($relations));
     }
 }

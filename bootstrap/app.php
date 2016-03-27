@@ -57,7 +57,6 @@ $app->register(\App\ServiceProviders\DBALConnectionServiceProvider::class);
 $app->register(\App\ServiceProviders\FakerServiceProvider::class);
 $app->register(\App\DataProviders\Organisations\OrganisationsDataProviderServiceProvider::class);
 $app->register(\App\Repositories\Organisations\OrganisationsRepositoryServiceProvider::class);
-$app->register(\App\Repositories\Relations\RelationsRepositoryServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

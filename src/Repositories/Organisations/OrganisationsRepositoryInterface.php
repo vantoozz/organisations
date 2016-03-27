@@ -3,6 +3,8 @@
 namespace App\Repositories\Organisations;
 
 use App\Collections\OrganisationsCollection;
+use App\Collections\RelationsCollection;
+use App\Exceptions\NotFoundException;
 
 /**
  * Interface OrganisationsRepositoryInterface
@@ -19,4 +21,12 @@ interface OrganisationsRepositoryInterface
      *
      */
     public function deleteAll();
+
+    /**
+     * @param string $title
+     * @param int $page
+     * @return RelationsCollection
+     * @throws NotFoundException
+     */
+    public function getRelationsByTitle($title, $page);
 }

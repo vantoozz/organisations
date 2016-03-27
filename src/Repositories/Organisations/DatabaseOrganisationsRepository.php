@@ -3,7 +3,11 @@
 namespace App\Repositories\Organisations;
 
 use App\Collections\OrganisationsCollection;
+use App\Collections\RelationsCollection;
 use App\DataProviders\Organisations\OrganisationsDataProviderInterface;
+use App\Exceptions\InvalidArgumentException;
+use App\Exceptions\NotFoundException;
+use App\Hydrators\RelationsCollection\DatabaseRelationsCollectionHydrator;
 use App\Organisation;
 
 /**
@@ -12,19 +16,57 @@ use App\Organisation;
  */
 class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterface
 {
+    const MAX_PER_PAGE = 100;
 
     /**
      * @var OrganisationsDataProviderInterface
      */
     private $dataProvider;
+    /**
+     * @var DatabaseRelationsCollectionHydrator
+     */
+    private $hydrator;
 
     /**
      * DatabaseOrganisationsRepository constructor.
      * @param OrganisationsDataProviderInterface $dataProvider
+     * @param DatabaseRelationsCollectionHydrator $hydrator
      */
-    public function __construct(OrganisationsDataProviderInterface $dataProvider)
-    {
+    public function __construct(
+        OrganisationsDataProviderInterface $dataProvider,
+        DatabaseRelationsCollectionHydrator $hydrator
+    ) {
+    
         $this->dataProvider = $dataProvider;
+        $this->hydrator = $hydrator;
+    }
+
+    /**
+     * @param string $title
+     * @param int $page
+     * @return RelationsCollection
+     * @throws NotFoundException
+     * @throws InvalidArgumentException
+     */
+    public function getRelationsByTitle($title, $page)
+    {
+        $organisationId = $this->dataProvider->getOrganisationId($title);
+
+        $count = $this->dataProvider->getOrganisationRelationsCount($organisationId);
+        $limit = self::MAX_PER_PAGE;
+        $offset = $limit * ($page - 1);
+
+        $data = [];
+        if ($offset < $count) {
+            $data = $this->dataProvider->getOrganisationRelations($organisationId, $limit, $offset);
+        }
+
+        $data = array_map(function ($row) use ($title) {
+            $row['from'] = $title;
+            return $row;
+        }, $data);
+
+        return $this->hydrator->hydrate($data);
     }
 
     /**

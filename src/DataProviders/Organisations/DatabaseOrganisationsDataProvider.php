@@ -82,7 +82,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
     {
         return $this->db->executeQuery(
             '
-              SELECT o.id, o.title, r.relation FROM(
+              SELECT o.title `to`, r.relation FROM(
                 SELECT r1.parent_id AS id , "parent" AS relation FROM relations r1 WHERE r1.organisation_id = :id
                 UNION 
                 SELECT r2.organisation_id AS id, "daughter" AS relation FROM relations r2 WHERE r2.parent_id = :id

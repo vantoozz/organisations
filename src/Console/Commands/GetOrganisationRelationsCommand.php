@@ -17,7 +17,7 @@ class GetOrganisationRelationsCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'organisations:relations {title : Organisation title}';
+    protected $signature = 'organisations:relations {title : Organisation title} {--p|page=1 : Page}';
 
     /**
      * @var string
@@ -34,7 +34,7 @@ class GetOrganisationRelationsCommand extends Command
     {
         $title = $this->argument('title');
 
-        $relations = $repository->getRelationsByTitle($title, 1);
+        $relations = $repository->getRelationsByTitle($title, (int)$this->option('page'));
 
         $this->info(json_encode($hydrator->extract($relations)));
     }

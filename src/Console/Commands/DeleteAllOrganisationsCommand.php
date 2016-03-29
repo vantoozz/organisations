@@ -30,7 +30,7 @@ class DeleteAllOrganisationsCommand extends Command
     public function handle(OrganisationsRepositoryInterface $repository)
     {
 
-        if (!$this->confirm('Delete all organisations?')) {
+        if (!$this->confirm('Delete all organisations?', true)) {
             $this->info('Nothing done');
 
             return;

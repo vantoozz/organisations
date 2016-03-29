@@ -72,6 +72,8 @@ class SeedOrganisationsCommand extends Command
 
         $bufferSize = ceil(self::BUFFER_SIZE / 50);
 
+        $collection->push(new Organisation('Seeded organisation'));
+            
         while (--$count >= 0) {
             $collection->push($this->createOrganisation());
             if ($bufferSize <= $collection->count()) {
@@ -115,7 +117,7 @@ class SeedOrganisationsCommand extends Command
             $this->addParent($organisation);
         }
 
-        $this->info('Created organisation '.$organisation->getTitle());
+        $this->info('Created organisation ' . $organisation->getTitle());
 
         return $organisation;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Hydrators\RelationsCollection\JsonRelationsCollectionHydrator;
+use App\Hydrators\RelationsCollection\ArrayRelationsCollectionHydrator;
 use App\Repositories\Organisations\OrganisationsRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config;
@@ -26,11 +26,11 @@ class GetOrganisationRelationsCommand extends Command
 
     /**
      * @param OrganisationsRepositoryInterface $repository
-     * @param JsonRelationsCollectionHydrator $hydrator
+     * @param ArrayRelationsCollectionHydrator $hydrator
      * @throws \App\Exceptions\NotFoundException
      * @throws \App\Exceptions\InvalidArgumentException
      */
-    public function handle(OrganisationsRepositoryInterface $repository, JsonRelationsCollectionHydrator $hydrator)
+    public function handle(OrganisationsRepositoryInterface $repository, ArrayRelationsCollectionHydrator $hydrator)
     {
         $title = $this->argument('title');
 

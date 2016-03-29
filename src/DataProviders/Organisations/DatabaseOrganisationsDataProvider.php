@@ -150,8 +150,8 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
      */
     public function deleteAll()
     {
-        $this->db->exec('TRUNCATE `relations`');
-        $this->db->exec('TRUNCATE `organisations`');
+        $this->db->exec('DELETE FROM `relations`');
+        $this->db->exec('DELETE FROM `organisations`');
     }
 
     /**

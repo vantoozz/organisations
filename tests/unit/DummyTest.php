@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Tests\TestCase;
+
 class DummyTest extends TestCase
 {
     /**

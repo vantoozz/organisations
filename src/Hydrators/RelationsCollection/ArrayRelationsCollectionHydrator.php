@@ -11,7 +11,7 @@ use App\Relation;
  * Class JsonRelationsCollectionHydrator
  * @package App\Hydrators\RelationsCollection
  */
-class JsonRelationsCollectionHydrator implements HydratorInterface
+class ArrayRelationsCollectionHydrator implements HydratorInterface
 {
 
     const FIELD_TITLE = 'org_name';
@@ -37,7 +37,7 @@ class JsonRelationsCollectionHydrator implements HydratorInterface
             ];
         }
 
-        return json_encode($data);
+        return $data;
     }
 
     /**

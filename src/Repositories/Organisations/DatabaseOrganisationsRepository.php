@@ -16,7 +16,7 @@ use App\Organisation;
  */
 class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterface
 {
-    const MAX_PER_PAGE = 100;
+    const MAX_PER_PAGE = 3;
 
     /**
      * @var OrganisationsDataProviderInterface

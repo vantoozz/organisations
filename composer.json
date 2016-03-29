@@ -26,12 +26,14 @@
       "App\\": "src/"
     },
     "classmap": [
-      "database/"
+      "database/",
+      "tests/TestCase.php"
     ]
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\": "tests/"
+      "App\\": "tests/unit",
+      "App\\Tests\\Integration\\": "tests/integration"
     }
   },
   "config": {

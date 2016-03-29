@@ -15,8 +15,11 @@
         beStrictAboutTestsThatDoNotTestAnything="true"
 >
     <testsuites>
-        <testsuite name="Application Test Suite">
-            <directory>./tests/</directory>
+        <testsuite name="Integration Tests">
+            <directory>./tests/integration</directory>
+        </testsuite>
+        <testsuite name="Unit Tests">
+            <directory>./tests/unit</directory>
         </testsuite>
     </testsuites>
     <filter>

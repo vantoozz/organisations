@@ -24,7 +24,7 @@ class JsonOrganisationsCollectionHydrator implements HydratorInterface
     public function extract($resource)
     {
         if (!$resource instanceof OrganisationsCollection) {
-            throw new InvalidArgumentException('Resource must be an instance of OrganisationsCollection');
+            throw new InvalidArgumentException('Resource must be an instance of '.OrganisationsCollection::class);
         }
 
         return '';

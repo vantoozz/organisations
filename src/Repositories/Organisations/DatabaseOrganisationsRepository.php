@@ -16,8 +16,6 @@ use App\Organisation;
  */
 class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterface
 {
-    const MAX_PER_PAGE = 3;
-
     /**
      * @var OrganisationsDataProviderInterface
      */
@@ -26,19 +24,27 @@ class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterfac
      * @var DatabaseRelationsCollectionHydrator
      */
     private $hydrator;
+    /**
+     * @var
+     */
+    private $maxPerPage;
 
     /**
      * DatabaseOrganisationsRepository constructor.
      * @param OrganisationsDataProviderInterface $dataProvider
      * @param DatabaseRelationsCollectionHydrator $hydrator
+     * @param $maxPerPage
      */
     public function __construct(
         OrganisationsDataProviderInterface $dataProvider,
-        DatabaseRelationsCollectionHydrator $hydrator
+        DatabaseRelationsCollectionHydrator $hydrator,
+        $maxPerPage
     ) {
     
+
         $this->dataProvider = $dataProvider;
         $this->hydrator = $hydrator;
+        $this->maxPerPage = (int)$maxPerPage;
     }
 
     /**
@@ -53,7 +59,7 @@ class DatabaseOrganisationsRepository implements OrganisationsRepositoryInterfac
         $organisationId = $this->dataProvider->getOrganisationId($title);
 
         $count = $this->dataProvider->getOrganisationRelationsCount($organisationId);
-        $limit = self::MAX_PER_PAGE;
+        $limit = $this->maxPerPage;
         $offset = $limit * ($page - 1);
 
         $data = [];

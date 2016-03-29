@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Organisations;
 
+use App\DataProviders\Organisations\OrganisationsDataProviderInterface;
+use App\Hydrators\RelationsCollection\DatabaseRelationsCollectionHydrator;
 use Illuminate\Contracts\Cache;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,9 +32,12 @@ class OrganisationsRepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(
-            OrganisationsRepositoryInterface::class,
-            DatabaseOrganisationsRepository::class
-        );
+        $this->app->singleton(OrganisationsRepositoryInterface::class, function () {
+            return new DatabaseOrganisationsRepository(
+                $this->app->make(OrganisationsDataProviderInterface::class),
+                new DatabaseRelationsCollectionHydrator,
+                env('MAX_RELATIONS_PER_PAGE', 100)
+            );
+        });
     }
 }

@@ -25,7 +25,7 @@ class ArrayRelationsCollectionHydrator implements HydratorInterface
     public function extract($resource)
     {
         if (!$resource instanceof RelationsCollection) {
-            throw new InvalidArgumentException('Resource must be an instance of RelationsCollection');
+            throw new InvalidArgumentException('Resource must be an instance of ' . RelationsCollection::class);
         }
 
         $data = [];

@@ -24,7 +24,7 @@ cp .env.example .env
 ./artisan migrate
 ```
 
-## Run
+## Run web-server
 ```bash
 php -S localhost:9999 -t . ./app.php
 ```

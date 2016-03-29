@@ -40,6 +40,8 @@ DELETE /api/v1/organisations
 ### Get organisation relations
 GET /api/v1/organisations/{title}/relations
 
+Example: http://localhost:9999/api/v1/organisations/Black%20Banana/relations
+
 ## Command line interface
 
 ### Create organisations

@@ -36,6 +36,6 @@ class GetOrganisationRelationsCommand extends Command
 
         $relations = $repository->getRelationsByTitle($title, 1);
 
-        $this->info($hydrator->extract($relations));
+        $this->info(json_encode($hydrator->extract($relations)));
     }
 }

@@ -16,14 +16,6 @@ class OrganisationsCollection extends TypedCollection
     protected $type = Organisation::class;
 
     /**
-     * @param array $items
-     */
-    public function __construct(array $items = [])
-    {
-        //nothing to do here
-    }
-
-    /**
      * @return string[]
      */
     public function getTitles()

@@ -22,7 +22,7 @@ class SeedOrganisationsCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'organisations:seed {count=100000 : Count of organisations to seed}';
+    protected $signature = 'organisations:seed {count=10000 : Count of organisations to seed}';
 
     /**
      * @var string
@@ -66,7 +66,6 @@ class SeedOrganisationsCommand extends Command
      */
     public function handle()
     {
-
         $collection = new OrganisationsCollection();
         $count = (int)$this->argument('count');
         $this->maxId = $this->getMaxId();
@@ -80,6 +79,8 @@ class SeedOrganisationsCommand extends Command
                 $bufferSize = self::BUFFER_SIZE;
             }
         }
+
+        $this->flushCollection($collection);
     }
 
     /**
@@ -114,6 +115,8 @@ class SeedOrganisationsCommand extends Command
             $this->addParent($organisation);
         }
 
+        $this->info('Created organisation '.$organisation->getTitle());
+
         return $organisation;
     }
 
@@ -122,7 +125,21 @@ class SeedOrganisationsCommand extends Command
      */
     private function addParent(Organisation $organisation)
     {
-        $title = 'Black Banana';
+        try {
+            $title = $this->db->executeQuery(
+                'SELECT `title` FROM `organisations` WHERE id >= :id LIMIT 1',
+                [mt_rand(0, (int)(0.2 * $this->maxId))],
+                [\PDO::PARAM_INT]
+            )->fetchColumn();
+        } catch (DBALException $e) {
+            $this->error($e->getMessage());
+            return;
+        }
+
+        if (false === $title) {
+            return;
+        }
+
         try {
             $organisation->addParent(new Organisation($title));
         } catch (InvalidArgumentException $e) {
@@ -133,11 +150,13 @@ class SeedOrganisationsCommand extends Command
     /**
      * @param OrganisationsCollection $collection
      * @return OrganisationsCollection
+     * @throws \App\Exceptions\InvalidArgumentException
      */
     private function flushCollection(OrganisationsCollection $collection)
     {
         $this->repository->store($collection);
         $this->maxId = $this->getMaxId();
+        $this->info('Organisations saved');
         return new OrganisationsCollection();
     }
 }

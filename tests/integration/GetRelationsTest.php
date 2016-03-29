@@ -22,7 +22,6 @@ class GetRelationsTest extends IntegrationTestCase
      */
     public function it_retrieves_next_page_relations()
     {
-        static::markTestIncomplete('Wrong relation count');
         $this->seedSampleData();
         $this->get('/api/v1/organisations/Black Banana/relations?page=3')
             ->seeJsonEquals([

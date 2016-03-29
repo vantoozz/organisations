@@ -112,7 +112,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
             '
           SELECT sum(cnt) FROM(
             SELECT count(*) cnt  FROM relations r1 WHERE r1.organisation_id = :id OR r1.parent_id = :id 
-            UNION
+            UNION ALL
             SELECT count(DISTINCT organisation_id) cnt FROM relations r2 WHERE r2.parent_id IN (
               SELECT parent_id  FROM relations WHERE organisation_id = :id
             ) AND r2.organisation_id <> :id

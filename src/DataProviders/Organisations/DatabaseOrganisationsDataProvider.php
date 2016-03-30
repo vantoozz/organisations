@@ -17,15 +17,15 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
     /**
      * @var Connection
      */
-    protected $db;
+    protected $connection;
 
     /**
      * DatabaseOrganisationsRepository constructor.
-     * @param Connection $db
+     * @param Connection $connection
      */
-    public function __construct(Connection $db)
+    public function __construct(Connection $connection)
     {
-        $this->db = $db;
+        $this->connection = $connection;
     }
 
     /**
@@ -37,7 +37,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
     {
         $ids = [];
 
-        $result = $this->db->executeQuery(
+        $result = $this->connection->executeQuery(
             'SELECT `id`, `title` FROM `organisations` WHERE `title` IN (?)',
             [$titles],
             [Connection::PARAM_STR_ARRAY]
@@ -65,8 +65,8 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
         $ids = [];
 
         foreach ($titles as $title) {
-            $this->db->insert('organisations', ['title' => $title]);
-            $ids[$title] = (int)$this->db->lastInsertId();
+            $this->connection->insert('organisations', ['title' => $title]);
+            $ids[$title] = (int)$this->connection->lastInsertId();
         }
         return $ids;
     }
@@ -80,7 +80,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
      */
     public function getOrganisationRelations($id, $limit, $offset)
     {
-        return $this->db->executeQuery(
+        return $this->connection->executeQuery(
             '
               SELECT o.title `to`, r.relation FROM(
                 SELECT r1.parent_id AS id , "parent" AS relation FROM relations r1 WHERE r1.organisation_id = :id
@@ -108,7 +108,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
      */
     public function getOrganisationRelationsCount($id)
     {
-        $count = $this->db->executeQuery(
+        $count = $this->connection->executeQuery(
             '
           SELECT sum(cnt) FROM(
             SELECT count(*) cnt  FROM relations r1 WHERE r1.organisation_id = :id OR r1.parent_id = :id 
@@ -132,7 +132,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
      */
     public function getOrganisationId($title)
     {
-        $id = $this->db->executeQuery(
+        $id = $this->connection->executeQuery(
             'SELECT `id` FROM `organisations` WHERE `title` = :title;',
             [$title],
             [\PDO::PARAM_STR]
@@ -150,8 +150,8 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
      */
     public function deleteAll()
     {
-        $this->db->exec('DELETE FROM `relations`');
-        $this->db->exec('DELETE FROM `organisations`');
+        $this->connection->exec('DELETE FROM `relations`');
+        $this->connection->exec('DELETE FROM `organisations`');
     }
 
     /**
@@ -178,7 +178,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
         }
         $organisationId = $ids[$organisation->getTitle()];
 
-        $result = $this->db->executeQuery(
+        $result = $this->connection->executeQuery(
             'SELECT `parent_id` FROM relations WHERE `organisation_id` = :organisation_id;',
             ['organisation_id' => $organisationId],
             [\PDO::PARAM_INT]
@@ -197,7 +197,7 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
             if (in_array($parentId, $stored, true)) {
                 continue;
             }
-            $this->db->insert('relations', ['organisation_id' => $organisationId, 'parent_id' => $parentId]);
+            $this->connection->insert('relations', ['organisation_id' => $organisationId, 'parent_id' => $parentId]);
             $stored[] = $parentId;
         }
     }

@@ -17,11 +17,13 @@ class MysqlOrganisationsDataProvider extends DatabaseOrganisationsDataProvider
      */
     public function deleteAll()
     {
-        $checkKeysStatus = $this->db->executeQuery('SHOW SESSION VARIABLES LIKE "foreign_key_checks";')->fetchColumn(1);
-        $this->db->exec('SET foreign_key_checks=0;');
-        $this->db->exec('TRUNCATE `relations`;');
-        $this->db->exec('TRUNCATE `organisations`;');
-        $this->db->executeQuery('SET foreign_key_checks=:status;', [$checkKeysStatus], [\PDO::PARAM_STR]);
+        $checkKeysStatus = $this->connection
+                                ->executeQuery('SHOW SESSION VARIABLES LIKE "foreign_key_checks";')
+                                ->fetchColumn(1);
+        $this->connection->exec('SET foreign_key_checks=0;');
+        $this->connection->exec('TRUNCATE `relations`;');
+        $this->connection->exec('TRUNCATE `organisations`;');
+        $this->connection->executeQuery('SET foreign_key_checks=:status;', [$checkKeysStatus], [\PDO::PARAM_STR]);
     }
 
     /**
@@ -57,7 +59,7 @@ class MysqlOrganisationsDataProvider extends DatabaseOrganisationsDataProvider
             ON DUPLICATE KEY UPDATE parent_id = parent_id
             ;';
 
-        $this->db->exec($query);
+        $this->connection->exec($query);
     }
 
     /**
@@ -69,11 +71,11 @@ class MysqlOrganisationsDataProvider extends DatabaseOrganisationsDataProvider
     {
         $values = implode(', ', array_fill(0, count($titles), '(?)'));
         $query = 'INSERT INTO organisations (`title`) VALUES ' . $values . ' ;';
-        $statement = $this->db->prepare($query);
+        $statement = $this->connection->prepare($query);
 
-        $i = 0;
+        $param = 0;
         foreach ($titles as $title) {
-            $statement->bindValue(++$i, $title);
+            $statement->bindValue(++$param, $title);
         }
         $statement->execute();
 

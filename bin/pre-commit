@@ -29,6 +29,13 @@
 		exit 1
 	fi
 
+./vendor/bin/phpmd src text phpmd.xml
+	if [ $? != 0 ]
+	then
+		echo "Fix errors before commit."
+		exit 1
+	fi
+
 ./vendor/bin/phpunit
 	if [ $? != 0 ]
 	then

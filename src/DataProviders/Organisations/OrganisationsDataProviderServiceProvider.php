@@ -37,10 +37,10 @@ class OrganisationsDataProviderServiceProvider extends ServiceProvider
             /** @var Connection $connection */
             $connection = $this->app->make(Connection::class);
 
+            $provider = new DatabaseOrganisationsDataProvider($connection);
+            
             if ($connection->getDriver() instanceof AbstractMySQLDriver) {
                 $provider = new MysqlOrganisationsDataProvider($connection);
-            } else {
-                $provider = new DatabaseOrganisationsDataProvider($connection);
             }
 
             /** @var TaggedCache $secondaryCache */

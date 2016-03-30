@@ -32,7 +32,7 @@ class FakerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Generator::class, function () {
-            return Factory::create();
+            return (new Factory)->create();
         });
     }
 }

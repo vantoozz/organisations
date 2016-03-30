@@ -31,7 +31,7 @@ class SeedOrganisationsCommand extends Command
     /**
      * @var Connection
      */
-    private $db;
+    private $connection;
 
     /**
      * @var FakerGenerator
@@ -49,14 +49,18 @@ class SeedOrganisationsCommand extends Command
 
     /**
      * SeedOrganisationsCommand constructor.
-     * @param Connection $db
+     * @param Connection $connection
      * @param FakerGenerator $faker
      * @param OrganisationsRepositoryInterface $repository
      */
-    public function __construct(Connection $db, FakerGenerator $faker, OrganisationsRepositoryInterface $repository)
-    {
+    public function __construct(
+        Connection $connection,
+        FakerGenerator $faker,
+        OrganisationsRepositoryInterface $repository
+    ) {
+    
         parent::__construct();
-        $this->db = $db;
+        $this->connection = $connection;
         $this->faker = $faker;
         $this->repository = $repository;
     }
@@ -73,7 +77,7 @@ class SeedOrganisationsCommand extends Command
         $bufferSize = ceil(self::BUFFER_SIZE / 50);
 
         $collection->push(new Organisation('Seeded organisation'));
-            
+
         while (--$count >= 0) {
             $collection->push($this->createOrganisation());
             if ($bufferSize <= $collection->count()) {
@@ -91,7 +95,7 @@ class SeedOrganisationsCommand extends Command
     private function getMaxId()
     {
         try {
-            $id = (int)$this->db->executeQuery('SELECT max(`id`) FROM `organisations`;')->fetchColumn();
+            $id = (int)$this->connection->executeQuery('SELECT max(`id`) FROM `organisations`;')->fetchColumn();
         } catch (DBALException $e) {
             $this->error($e->getMessage());
             $id = 0;
@@ -128,7 +132,7 @@ class SeedOrganisationsCommand extends Command
     private function addParent(Organisation $organisation)
     {
         try {
-            $title = $this->db->executeQuery(
+            $title = $this->connection->executeQuery(
                 'SELECT `title` FROM `organisations` WHERE id >= :id LIMIT 1',
                 [mt_rand(0, (int)(0.2 * $this->maxId))],
                 [\PDO::PARAM_INT]

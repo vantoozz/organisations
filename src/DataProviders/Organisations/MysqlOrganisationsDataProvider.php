@@ -33,9 +33,15 @@ class MysqlOrganisationsDataProvider extends DatabaseOrganisationsDataProvider
     {
         $values = [];
         foreach ($organisations as $organisation) {
+            if (empty($ids[$organisation->getTitle()])) {
+                continue;
+            }
             $organisationId = $ids[$organisation->getTitle()];
             foreach ($organisation->getParents() as $parent) {
                 /** @var Organisation $parent */
+                if (empty($ids[$parent->getTitle()])) {
+                    continue;
+                }
                 $parentId = $ids[$parent->getTitle()];
                 $values[] = '(' . (int)$organisationId . ', ' . (int)$parentId . ')';
             }

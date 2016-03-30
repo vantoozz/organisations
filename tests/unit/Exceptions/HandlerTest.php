@@ -35,6 +35,16 @@ class HandlerTest extends TestCase
     }
 
     /**
+     * @param $debug
+     */
+    protected function setDebugVariable($debug)
+    {
+        putenv('APP_DEBUG=' . $debug);
+        $_ENV['APP_DEBUG'] = $debug;
+        $_SERVER['APP_DEBUG'] = $debug;
+    }
+
+    /**
      * @test
      */
     public function it_renders_errors_with_no_whoops()
@@ -60,12 +70,16 @@ class HandlerTest extends TestCase
     }
 
     /**
-     * @param $debug
+     * @test
      */
-    protected function setDebugVariable($debug)
+    public function it_handles_not_found_exception()
     {
-        putenv('APP_DEBUG=' . $debug);
-        $_ENV['APP_DEBUG'] = $debug;
-        $_SERVER['APP_DEBUG'] = $debug;
+        $whoops = new Run();
+        /** @var Run $whoops */
+        $handler = new Handler($whoops);
+        $request = new Request;
+        $expected = new Response(null, 404);
+        static::assertEquals($expected, $handler->render($request, new NotFoundException('some message')));
+
     }
 }

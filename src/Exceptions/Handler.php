@@ -37,6 +37,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof NotFoundException) {
+            return new Response(null, 404);
+        }
+
         if (true === env('APP_DEBUG')) {
             return $this->renderExceptionWithWhoops($e);
         }

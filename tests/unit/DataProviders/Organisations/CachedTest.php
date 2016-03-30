@@ -4,7 +4,7 @@ namespace App\DataProviders\Organisations;
 
 use App\Collections\OrganisationsCollection;
 use App\Tests\TestCase;
-use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Cache\TaggedCache;
 
 class CachedTest extends TestCase
 {
@@ -15,14 +15,18 @@ class CachedTest extends TestCase
     public function it_deletes_all_data()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+
+        $cache
+            ->expects(static::once())
+            ->method('flush');
 
         $provider
             ->expects(static::once())
             ->method('deleteAll');
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         $cachedProvider->deleteAll();
@@ -34,10 +38,14 @@ class CachedTest extends TestCase
     public function it_stores_relations()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $organisations = new OrganisationsCollection();
         $ids = [1, 2, 3];
+
+        $cache
+            ->expects(static::once())
+            ->method('flush');
 
         $provider
             ->expects(static::once())
@@ -45,7 +53,7 @@ class CachedTest extends TestCase
             ->with($organisations, $ids);
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         $cachedProvider->storeRelations($organisations, $ids);
@@ -57,7 +65,7 @@ class CachedTest extends TestCase
     public function it_retrieves_relations()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $provider
             ->expects(static::once())
@@ -66,7 +74,57 @@ class CachedTest extends TestCase
             ->willReturn(111);
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
+        $cachedProvider = new Cached($provider, $cache, 9000);
+
+        static::assertSame(111, $cachedProvider->getOrganisationRelations(1, 2, 3));
+    }
+
+    /**
+     * @test
+     */
+    public function it_retrieves_organisations_count_from_cache()
+    {
+        $provider = static::getMock(OrganisationsDataProviderInterface::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+
+        $cache
+            ->expects(static::once())
+            ->method('get')
+            ->with('CachedOrganisationsDataProviderInterface:2e77dfcf56f4fa3e990010ea0b8a26d387ab5969')
+            ->willReturn(111);
+
+        $cache
+            ->expects(static::never())
+            ->method('put');
+
+        /** @var OrganisationsDataProviderInterface $provider */
+        /** @var TaggedCache $cache */
+        $cachedProvider = new Cached($provider, $cache, 9000);
+
+        static::assertSame(111, $cachedProvider->getOrganisationRelationsCount(123));
+    }
+
+    /**
+     * @test
+     */
+    public function it_retrieves_organisations_relations_from_cache()
+    {
+        $provider = static::getMock(OrganisationsDataProviderInterface::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+
+        $cache
+            ->expects(static::once())
+            ->method('get')
+            ->with('CachedOrganisationsDataProviderInterface:e80ea4d6880c61a9c272243bf582953439e4781b')
+            ->willReturn(111);
+
+        $cache
+            ->expects(static::never())
+            ->method('put');
+
+        /** @var OrganisationsDataProviderInterface $provider */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         static::assertSame(111, $cachedProvider->getOrganisationRelations(1, 2, 3));
@@ -78,7 +136,7 @@ class CachedTest extends TestCase
     public function it_retrieves_organisations_count()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $provider
             ->expects(static::once())
@@ -87,7 +145,7 @@ class CachedTest extends TestCase
             ->willReturn(111);
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         static::assertSame(111, $cachedProvider->getOrganisationRelationsCount(123));
@@ -99,7 +157,7 @@ class CachedTest extends TestCase
     public function it_fetches_ids_by_titles_from_cache_only()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::at(0))
@@ -126,7 +184,7 @@ class CachedTest extends TestCase
             ->willReturn(222);
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         $data = $cachedProvider->fetchIdsByTitles(['one', 'two']);
@@ -139,7 +197,7 @@ class CachedTest extends TestCase
     public function it_fetches_ids_by_titles_from_inner_provider()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::never())
@@ -167,7 +225,7 @@ class CachedTest extends TestCase
             ->with('CachedOrganisationsDataProviderInterface:3b82d45156e50f75ede95be10768a977b9b0fc28', 222, 9000);
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         $data = $cachedProvider->fetchIdsByTitles(['one', 'two']);
@@ -180,7 +238,7 @@ class CachedTest extends TestCase
     public function it_retrieves_organisation_by_id_from_inner_provider()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())
@@ -200,7 +258,7 @@ class CachedTest extends TestCase
             ->willReturn(123);
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         static::assertSame(123, $cachedProvider->getOrganisationId('one'));
@@ -212,7 +270,7 @@ class CachedTest extends TestCase
     public function it_retrieves_organisation_by_id()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMock(Repository::class);
+        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())
@@ -225,7 +283,7 @@ class CachedTest extends TestCase
             ->method('getOrganisationId');
 
         /** @var OrganisationsDataProviderInterface $provider */
-        /** @var Repository $cache */
+        /** @var TaggedCache $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
         static::assertSame(123, $cachedProvider->getOrganisationId('one'));

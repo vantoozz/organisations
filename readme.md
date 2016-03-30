@@ -6,6 +6,7 @@
 composer install
 cp .env.example .env
 ```
+Fill `.evn` with your settings
 
 ## Tests
 
@@ -28,6 +29,32 @@ cp .env.example .env
 ```bash
 php -S localhost:9999 -t . ./app.php
 ```
+
+Of course you can use any external web-сервер, e.g. _nginx_:
+```
+server {
+    listen   80;
+
+    server_name organisations-api.local;
+
+    charset utf-8;
+
+    set $project_root /path/to/organisations-api;
+
+    root $project_root/public;
+
+    location / {
+        try_files $uri @app;
+    }
+
+    location @app{
+        fastcgi_pass 127.0.0.1:9000;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $project_root/app.php;
+    }
+}
+```
+
 
 ## API endpoints
 

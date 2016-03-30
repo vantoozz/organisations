@@ -4,7 +4,7 @@ namespace App\DataProviders\Organisations;
 
 use App\Collections\OrganisationsCollection;
 use App\Exceptions\NotFoundException;
-use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Cache\TaggedCache;
 
 /**
  * Class Cached
@@ -20,7 +20,7 @@ class Cached implements OrganisationsDataProviderInterface
     private $provider;
 
     /**
-     * @var Repository
+     * @var TaggedCache
      */
     private $cache;
 
@@ -32,10 +32,10 @@ class Cached implements OrganisationsDataProviderInterface
     /**
      * Cached constructor.
      * @param OrganisationsDataProviderInterface $provider
-     * @param Repository $cache
+     * @param TaggedCache $cache
      * @param $ttl
      */
-    public function __construct(OrganisationsDataProviderInterface $provider, Repository $cache, $ttl)
+    public function __construct(OrganisationsDataProviderInterface $provider, TaggedCache $cache, $ttl)
     {
         $this->provider = $provider;
         $this->cache = $cache;
@@ -66,7 +66,7 @@ class Cached implements OrganisationsDataProviderInterface
         foreach ($this->provider->fetchIdsByTitles($notCached) as $title => $id) {
             $key = $this->makeKey(__METHOD__ . '_' . $title);
             $this->cache->put($key, $id, $this->ttl);
-            $data[$title] = $id;
+            $data[$title] = (int)$id;
         }
 
         return $data;
@@ -89,7 +89,18 @@ class Cached implements OrganisationsDataProviderInterface
      */
     public function getOrganisationRelations($id, $limit, $offset)
     {
-        return $this->provider->getOrganisationRelations($id, $limit, $offset);
+
+        $key = $this->makeKey(__METHOD__ . '_' . $id . '_' . $limit . '_' . $offset);
+
+        $data = $this->cache->get($key, null);
+        if (null !== $data) {
+            return $data;
+        }
+
+        $data = $this->provider->getOrganisationRelations($id, $limit, $offset);
+        $this->cache->put($key, $data, $this->ttl);
+
+        return $data;
     }
 
     /**
@@ -98,7 +109,17 @@ class Cached implements OrganisationsDataProviderInterface
      */
     public function getOrganisationRelationsCount($id)
     {
-        return $this->provider->getOrganisationRelationsCount($id);
+        $key = $this->makeKey(__METHOD__ . '_' . $id);
+
+        $count = $this->cache->get($key, null);
+        if (null !== $count) {
+            return $count;
+        }
+
+        $count = $this->provider->getOrganisationRelationsCount($id);
+        $this->cache->put($key, $count, $this->ttl);
+
+        return (int)$count;
     }
 
     /**
@@ -106,6 +127,7 @@ class Cached implements OrganisationsDataProviderInterface
      */
     public function deleteAll()
     {
+        $this->cache->flush();
         return $this->provider->deleteAll();
     }
 
@@ -135,6 +157,7 @@ class Cached implements OrganisationsDataProviderInterface
      */
     public function storeRelations(OrganisationsCollection $organisations, array $ids)
     {
+        $this->cache->flush();
         return $this->provider->storeRelations($organisations, $ids);
     }
 }

@@ -4,6 +4,7 @@ namespace App\DataProviders\Organisations;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
+use Illuminate\Cache\TaggedCache;
 use Illuminate\Contracts\Cache;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,10 +43,10 @@ class OrganisationsDataProviderServiceProvider extends ServiceProvider
                 $provider = new DatabaseOrganisationsDataProvider($connection);
             }
 
-            /** @var Cache\Repository $secondaryCache */
-            $secondaryCache = $this->app->make(Cache\Repository::class);
-            /** @var Cache\Repository $primaryCache */
-            $primaryCache = $this->app->make(Cache\Factory::class)->store('array');
+            /** @var TaggedCache $secondaryCache */
+            $secondaryCache = $this->app->make(Cache\Repository::class)->tags('OrganisationsDataProvider');
+            /** @var TaggedCache $primaryCache */
+            $primaryCache = $this->app->make(Cache\Factory::class)->store('array')->tags('OrganisationsDataProvider');
 
             $provider = new Cached($provider, $secondaryCache, 60);
             $provider = new Cached($provider, $primaryCache, 5);

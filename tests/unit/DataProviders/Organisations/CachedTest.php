@@ -179,26 +179,59 @@ class CachedTest extends TestCase
     /**
      * @test
      */
-    public function it_retrieves_organisation_by_id()
+    public function it_retrieves_organisation_by_id_from_inner_provider()
     {
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
         $cache = static::getMock(Repository::class);
 
-        $callback = function () {
-            return 123;
-        };
+        $cache
+            ->expects(static::once())
+            ->method('get')
+            ->with('CachedOrganisationsDataProviderInterface:08b1e58ccfb6953fb6c1f57c77541405798a76d4', null)
+            ->willReturn(null);
 
         $cache
             ->expects(static::once())
-            ->method('remember')
-            ->with('CachedOrganisationsDataProviderInterface:08b1e58ccfb6953fb6c1f57c77541405798a76d4', 9000, $callback)
-            ->willReturn(111);
+            ->method('put')
+            ->with('CachedOrganisationsDataProviderInterface:08b1e58ccfb6953fb6c1f57c77541405798a76d4', 123, 9000);
 
+
+        $provider
+            ->expects(static::once())
+            ->method('getOrganisationId')
+            ->with('one')
+            ->willReturn(123);
 
         /** @var OrganisationsDataProviderInterface $provider */
         /** @var Repository $cache */
         $cachedProvider = new Cached($provider, $cache, 9000);
 
-        static::assertSame(111, $cachedProvider->getOrganisationId('one'));
+        static::assertSame(123, $cachedProvider->getOrganisationId('one'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_retrieves_organisation_by_id()
+    {
+        $provider = static::getMock(OrganisationsDataProviderInterface::class);
+        $cache = static::getMock(Repository::class);
+
+        $cache
+            ->expects(static::once())
+            ->method('get')
+            ->with('CachedOrganisationsDataProviderInterface:08b1e58ccfb6953fb6c1f57c77541405798a76d4', null)
+            ->willReturn(123);
+
+
+        $provider
+            ->expects(static::never())
+            ->method('getOrganisationId');
+
+        /** @var OrganisationsDataProviderInterface $provider */
+        /** @var Repository $cache */
+        $cachedProvider = new Cached($provider, $cache, 9000);
+
+        static::assertSame(123, $cachedProvider->getOrganisationId('one'));
     }
 }

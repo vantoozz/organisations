@@ -100,7 +100,7 @@ class Cached implements OrganisationsDataProviderInterface
     {
         return $this->provider->getOrganisationRelationsCount($id);
     }
-    
+
     /**
      * @return mixed
      */
@@ -118,9 +118,15 @@ class Cached implements OrganisationsDataProviderInterface
     {
         $key = $this->makeKey(__METHOD__ . '_' . $title);
 
-        return (int)$this->cache->remember($key, $this->ttl, function () use ($title) {
-            return $this->provider->getOrganisationId($title);
-        });
+        $id = $this->cache->get($key, null);
+        if (null !== $id) {
+            return $id;
+        }
+
+        $id = $this->provider->getOrganisationId($title);
+        $this->cache->put($key, $id, $this->ttl);
+
+        return (int)$id;
     }
 
     /**

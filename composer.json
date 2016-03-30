@@ -1,6 +1,6 @@
 {
-  "name": "vantoozz/pipedrive-test",
-  "description": "Pipedrive test",
+  "name": "vantoozz/organisations-test",
+  "description": "Organisations test",
   "license": "MIT",
   "require": {
     "php": ">=5.6.0",

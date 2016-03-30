@@ -134,7 +134,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
         $connection
             ->expects(static::at(0))
             ->method('executeQuery')
-            ->with($query,  ['organisation_id' => 111])
+            ->with($query, ['organisation_id' => 111])
         ->willReturnSelf();
         $connection
             ->expects(static::at(1))
@@ -148,7 +148,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
         $connection
             ->expects(static::at(3))
             ->method('executeQuery')
-            ->with($query,  ['organisation_id' => 222])
+            ->with($query, ['organisation_id' => 222])
             ->willReturnSelf();
         $connection
             ->expects(static::at(4))
@@ -207,5 +207,4 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
 
         static::assertSame(123, $provider->getOrganisationId('one'));
     }
-
 }

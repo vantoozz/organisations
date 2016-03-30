@@ -21,7 +21,6 @@ class ArrayRelationsCollectionHydratorTest extends TestCase
         (new ArrayRelationsCollectionHydrator())->extract(new \stdClass);
     }
 
-
     /**
      * @test
      */

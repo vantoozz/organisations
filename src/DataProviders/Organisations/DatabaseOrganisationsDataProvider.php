@@ -173,6 +173,9 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
      */
     private function storeOrganisationRelations(Organisation $organisation, array $ids)
     {
+        if (empty($ids[$organisation->getTitle()])) {
+            return;
+        }
         $organisationId = $ids[$organisation->getTitle()];
 
         $result = $this->db->executeQuery(
@@ -187,6 +190,9 @@ class DatabaseOrganisationsDataProvider implements OrganisationsDataProviderInte
         }
 
         foreach ($organisation->getParents() as $parent) {
+            if (empty($ids[$parent->getTitle()])) {
+                continue;
+            }
             $parentId = $ids[$parent->getTitle()];
             if (in_array($parentId, $stored, true)) {
                 continue;

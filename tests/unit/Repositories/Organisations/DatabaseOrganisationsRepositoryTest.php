@@ -28,7 +28,6 @@ class DatabaseOrganisationsRepositoryTest extends TestCase
         $repository->deleteAll();
     }
 
-
     /**
      * @test
      */

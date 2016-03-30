@@ -7,7 +7,6 @@ use App\Tests\TestCase;
 class OrganisationsRepositoryServiceProviderTest extends TestCase
 {
 
-
     /**
      * @test
      */

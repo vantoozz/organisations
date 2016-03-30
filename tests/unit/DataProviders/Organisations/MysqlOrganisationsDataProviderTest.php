@@ -44,13 +44,11 @@ class MysqlOrganisationsDataProviderTest extends TestCase
     {
         $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
-
         $one = new Organisation('one');
         $two = new Organisation('two');
         $three = new Organisation('three');
         $one->addParent($two);
         $organisations = new OrganisationsCollection([$one, $two, $three]);
-
 
         $connection
             ->expects(static::once())
@@ -74,7 +72,6 @@ class MysqlOrganisationsDataProviderTest extends TestCase
     {
         $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
-
         $connection
             ->expects(static::never())
             ->method('exec');
@@ -92,7 +89,6 @@ class MysqlOrganisationsDataProviderTest extends TestCase
     {
         $statement = static::getMock(Statement::class);
         $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
-
 
         $connection
             ->expects(static::at(0))

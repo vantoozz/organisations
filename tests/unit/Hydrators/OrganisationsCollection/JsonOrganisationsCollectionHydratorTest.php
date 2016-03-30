@@ -28,7 +28,6 @@ class JsonOrganisationsCollectionHydratorTest extends TestCase
         (new JsonOrganisationsCollectionHydrator())->extract(new \stdClass);
     }
 
-
     /**
      * @test
      */

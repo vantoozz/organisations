@@ -141,7 +141,6 @@ class CachedTest extends TestCase
         $provider = static::getMock(OrganisationsDataProviderInterface::class);
         $cache = static::getMock(Repository::class);
 
-
         $cache
             ->expects(static::never())
             ->method('get');
@@ -156,7 +155,6 @@ class CachedTest extends TestCase
             ->method('fetchIdsByTitles')
             ->with(['one', 'two'])
             ->willReturn(['one' => 111, 'two' => 222]);
-
 
         $cache
             ->expects(static::at(2))
@@ -195,7 +193,6 @@ class CachedTest extends TestCase
             ->method('put')
             ->with('CachedOrganisationsDataProviderInterface:08b1e58ccfb6953fb6c1f57c77541405798a76d4', 123, 9000);
 
-
         $provider
             ->expects(static::once())
             ->method('getOrganisationId')
@@ -222,7 +219,6 @@ class CachedTest extends TestCase
             ->method('get')
             ->with('CachedOrganisationsDataProviderInterface:08b1e58ccfb6953fb6c1f57c77541405798a76d4', null)
             ->willReturn(123);
-
 
         $provider
             ->expects(static::never())

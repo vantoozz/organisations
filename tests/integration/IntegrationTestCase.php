@@ -24,7 +24,7 @@ abstract class IntegrationTestCase extends TestCase
         $repository = $this->app->make(OrganisationsRepositoryInterface::class);
         /** @var JsonOrganisationsCollectionHydrator $hydrator */
         $hydrator = $this->app->make(JsonOrganisationsCollectionHydrator::class);
-        
+
         $repository->store($hydrator->hydrate($this->getSample()));
     }
 

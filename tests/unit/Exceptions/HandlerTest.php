@@ -8,7 +8,6 @@ use Illuminate\Http\Response;
 use Whoops\Run;
 use Whoops\Util\SystemFacade;
 
-
 class HandlerTest extends TestCase
 {
     /**

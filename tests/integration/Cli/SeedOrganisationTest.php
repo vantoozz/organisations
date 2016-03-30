@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tests\Integration;
+namespace App\Tests\Integration\Cli;
 
+use App\Tests\Integration\IntegrationTestCase;
 use Illuminate\Contracts\Console\Kernel;
 
 class SeedOrganisationTest extends IntegrationTestCase

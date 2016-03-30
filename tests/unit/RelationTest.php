@@ -15,7 +15,7 @@ class RelationTest extends TestCase
         $from = new Organisation('from');
         $to = new Organisation('to');
         $type = new RelationType(RelationType::SISTER);
-        $relation  = new Relation($from, $to, $type);
+        $relation = new Relation($from, $to, $type);
         static::assertSame($from, $relation->getFrom());
     }
 
@@ -27,7 +27,7 @@ class RelationTest extends TestCase
         $from = new Organisation('from');
         $to = new Organisation('to');
         $type = new RelationType(RelationType::SISTER);
-        $relation  = new Relation($from, $to, $type);
+        $relation = new Relation($from, $to, $type);
         static::assertSame($to, $relation->getTo());
     }
 
@@ -39,7 +39,7 @@ class RelationTest extends TestCase
         $from = new Organisation('from');
         $to = new Organisation('to');
         $type = new RelationType(RelationType::SISTER);
-        $relation  = new Relation($from, $to, $type);
+        $relation = new Relation($from, $to, $type);
         static::assertSame($type, $relation->getRelationType());
     }
 }

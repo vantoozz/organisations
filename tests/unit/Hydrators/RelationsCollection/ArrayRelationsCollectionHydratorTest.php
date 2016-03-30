@@ -50,7 +50,7 @@ class ArrayRelationsCollectionHydratorTest extends TestCase
                 ['org_name' => 'bbb', 'relationship_type' => 'daughter'],
                 ['org_name' => 'ddd', 'relationship_type' => 'sister']
             ],
-            $hydrator->extract($collection));
+            $hydrator->extract($collection)
+        );
     }
-
 }

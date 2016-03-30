@@ -54,6 +54,7 @@ class Cached implements OrganisationsDataProviderInterface
             $key = $this->makeKey(__METHOD__ . '_' . $title);
             if ($this->cache->has($key)) {
                 $data[$title] = $this->cache->get($key);
+                continue;
             }
             $notCached[] = $title;
         }

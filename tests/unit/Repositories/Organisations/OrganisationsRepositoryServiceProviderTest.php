@@ -31,5 +31,4 @@ class OrganisationsRepositoryServiceProviderTest extends TestCase
             $this->app->make(OrganisationsRepositoryInterface::class)
         );
     }
-
 }

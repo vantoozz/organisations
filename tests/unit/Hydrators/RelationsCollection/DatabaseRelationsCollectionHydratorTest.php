@@ -44,10 +44,9 @@ class DatabaseRelationsCollectionHydratorTest extends TestCase
 
         $hydrator = new DatabaseRelationsCollectionHydrator();
         $hydrated = $hydrator->hydrate([
-            ['from'=>'aaa', 'to'=>'bbb', 'relation'=>'daughter'],
-            ['from'=>'ccc', 'to'=>'ddd', 'relation'=>'sister'],
+            ['from' => 'aaa', 'to' => 'bbb', 'relation' => 'daughter'],
+            ['from' => 'ccc', 'to' => 'ddd', 'relation' => 'sister'],
         ]);
         static::assertEquals($expected, $hydrated);
     }
-
 }

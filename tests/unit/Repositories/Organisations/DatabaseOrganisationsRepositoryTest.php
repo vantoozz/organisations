@@ -84,7 +84,7 @@ class DatabaseOrganisationsRepositoryTest extends TestCase
         $hydrator
             ->expects(static::once())
             ->method('hydrate')
-            ->with([['one' => 1, 'from'=>'aaa'], ['two' => 2, 'from'=>'aaa']]);
+            ->with([['one' => 1, 'from' => 'aaa'], ['two' => 2, 'from' => 'aaa']]);
 
         /** @var OrganisationsDataProviderInterface $provider */
         /** @var DatabaseRelationsCollectionHydrator $hydrator */

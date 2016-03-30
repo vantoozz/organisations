@@ -32,7 +32,7 @@ Fill `.evn` with your settings
 php -S localhost:9999 -t . ./app.php
 ```
 
-Of course you can use any external web-сервер, e.g. _nginx_:
+Of course you can use any external web-server, e.g. _nginx_:
 ```
 server {
     listen   80;

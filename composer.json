@@ -9,7 +9,8 @@
     "illuminate/redis": "~5",
     "predis/predis": "~1",
     "vlucas/phpdotenv": "~2",
-    "filp/whoops": "~2"
+    "filp/whoops": "~2",
+    "roave/security-advisories": "dev-master"
   },
   "require-dev": {
     "ext-pdo_sqlite": "*",

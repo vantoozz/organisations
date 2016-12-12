@@ -12,6 +12,7 @@
     "filp/whoops": "~2"
   },
   "require-dev": {
+    "ext-pdo_sqlite": "*",
     "fzaninotto/faker": "~1",
     "phploc/phploc": "~3",
     "phpunit/phpunit": "~5",

@@ -17,7 +17,7 @@ class DatabaseOrganisationsRepositoryTest extends TestCase
     public function it_deletes_all_data()
     {
         $hydrator = new DatabaseRelationsCollectionHydrator;
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
 
         $provider
             ->expects(static::once())
@@ -34,7 +34,7 @@ class DatabaseOrganisationsRepositoryTest extends TestCase
     public function it_deletes_stores_collection()
     {
         $hydrator = new DatabaseRelationsCollectionHydrator;
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
 
         $organisations = new OrganisationsCollection([
             new Organisation('one'),
@@ -61,8 +61,8 @@ class DatabaseOrganisationsRepositoryTest extends TestCase
      */
     public function it_fetches_relations_by_title()
     {
-        $hydrator = static::getMock(DatabaseRelationsCollectionHydrator::class);
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
+        $hydrator = $this->createMock(DatabaseRelationsCollectionHydrator::class);
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
 
         $provider
             ->expects(static::once())

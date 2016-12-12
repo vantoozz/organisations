@@ -38,8 +38,8 @@ class OrganisationsDataProviderServiceProviderTest extends TestCase
     public function it_registers_mysql_data_provider()
     {
         $this->refreshApplication();
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
-        $mysql = static::getMock(AbstractMySQLDriver::class);
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $mysql = $this->createMock(AbstractMySQLDriver::class);
         $connection
             ->expects(static::once())
             ->method('getDriver')

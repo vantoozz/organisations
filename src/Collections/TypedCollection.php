@@ -52,7 +52,6 @@ abstract class TypedCollection extends Collection
     {
         $this->checkType($value);
         return parent::prepend($value, $key);
-
     }
 
     /**

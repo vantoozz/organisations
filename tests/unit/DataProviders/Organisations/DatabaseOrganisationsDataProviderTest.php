@@ -14,7 +14,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_deletes_all_the_data()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))
@@ -37,7 +37,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_stores_titles()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))
@@ -71,7 +71,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_retrieves_relations()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))
@@ -94,7 +94,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_retrieves_relations_count()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))
@@ -117,7 +117,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_stores_relations()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $one = new Organisation('one');
         $two = new Organisation('two');
@@ -165,7 +165,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_retrieves_organisation_id()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))
@@ -190,7 +190,7 @@ class DatabaseOrganisationsDataProviderTest extends TestCase
      */
     public function it_throws_an_exception_if_organisation_not_found_by_id()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))

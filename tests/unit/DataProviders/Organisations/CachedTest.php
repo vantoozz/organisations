@@ -14,8 +14,8 @@ class CachedTest extends TestCase
      */
     public function it_deletes_all_data()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())
@@ -37,8 +37,8 @@ class CachedTest extends TestCase
      */
     public function it_stores_relations()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $organisations = new OrganisationsCollection();
         $ids = [1, 2, 3];
@@ -64,8 +64,8 @@ class CachedTest extends TestCase
      */
     public function it_retrieves_relations()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $provider
             ->expects(static::once())
@@ -85,8 +85,8 @@ class CachedTest extends TestCase
      */
     public function it_retrieves_organisations_count_from_cache()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())
@@ -110,8 +110,8 @@ class CachedTest extends TestCase
      */
     public function it_retrieves_organisations_relations_from_cache()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())
@@ -135,8 +135,8 @@ class CachedTest extends TestCase
      */
     public function it_retrieves_organisations_count()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $provider
             ->expects(static::once())
@@ -156,8 +156,8 @@ class CachedTest extends TestCase
      */
     public function it_fetches_ids_by_titles_from_cache_only()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::at(0))
@@ -196,8 +196,8 @@ class CachedTest extends TestCase
      */
     public function it_fetches_ids_by_titles_from_inner_provider()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::never())
@@ -237,8 +237,8 @@ class CachedTest extends TestCase
      */
     public function it_retrieves_organisation_by_id_from_inner_provider()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())
@@ -269,8 +269,8 @@ class CachedTest extends TestCase
      */
     public function it_retrieves_organisation_by_id()
     {
-        $provider = static::getMock(OrganisationsDataProviderInterface::class);
-        $cache = static::getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
+        $provider = $this->createMock(OrganisationsDataProviderInterface::class);
+        $cache = $this->getMockBuilder(TaggedCache::class)->disableOriginalConstructor()->getMock();
 
         $cache
             ->expects(static::once())

@@ -16,7 +16,7 @@ class MysqlOrganisationsDataProviderTest extends TestCase
      */
     public function it_truncates_tables()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))
@@ -42,7 +42,7 @@ class MysqlOrganisationsDataProviderTest extends TestCase
      */
     public function it_stores_relations()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $one = new Organisation('one');
         $two = new Organisation('two');
@@ -70,7 +70,7 @@ class MysqlOrganisationsDataProviderTest extends TestCase
      */
     public function it_do_not_stores_relations()
     {
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::never())
@@ -87,8 +87,8 @@ class MysqlOrganisationsDataProviderTest extends TestCase
      */
     public function it_stores_titles()
     {
-        $statement = static::getMock(Statement::class);
-        $connection = static::getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+        $statement = $this->createMock(Statement::class);
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
 
         $connection
             ->expects(static::at(0))

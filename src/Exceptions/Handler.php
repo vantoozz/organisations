@@ -1,64 +1,97 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Http\Response;
-use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
-use Whoops\Run;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Class Handler
  * @package App\Exceptions
  */
-class Handler extends ExceptionHandler
+final class Handler implements ExceptionHandler
 {
     /**
-     * @var Run
+     * @var LoggerInterface
      */
-    private $whoops;
+    private $logger;
+
+    /**
+     * @var array
+     */
+    private $ignoredExceptions = [];
 
     /**
      * Handler constructor.
-     * @param Run $whoops
+     * @param LoggerInterface $logger
      */
-    public function __construct(Run $whoops)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->whoops = $whoops;
+        $this->logger = $logger;
+    }
+
+    /**
+     * @param Exception $e
+     */
+    public function report(Exception $e): void
+    {
+        $this->logger->error($e, ['exception' => $e]);
     }
 
     /**
      * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Exception $e
-     * @throws \InvalidArgumentException
-     * @return Response
+     * @param  Request $request
+     * @param Exception $e
+     * @return JsonResponse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function render($request, Exception $e)
+    public function render($request, Exception $e): JsonResponse
     {
-        if ($e instanceof NotFoundException) {
-            return new Response(null, 404);
+        $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+        if ($e instanceof HttpException) {
+            $statusCode = $e->getStatusCode();
         }
 
-        if (true === env('APP_DEBUG')) {
-            return $this->renderExceptionWithWhoops($e);
+        if ($e instanceof HttpResponseException) {
+            $statusCode = $e->getResponse()->getStatusCode();
         }
 
-        return parent::render($request, $e);
+        $errorMessage = $e->getMessage();
+        if (empty($errorMessage) && array_key_exists($statusCode, Response::$statusTexts)) {
+            $errorMessage = Response::$statusTexts[$statusCode];
+        }
+
+        return new JsonResponse([
+            'error' => $errorMessage,
+        ], $statusCode);
     }
 
     /**
-     * Render an exception using Whoops.
-     *
-     * @param  \Exception $e
-     * @return Response
-     * @throws \InvalidArgumentException
+     * @param OutputInterface $output
+     * @param Exception $e
      */
-    protected function renderExceptionWithWhoops(Exception $e)
+    public function renderForConsole($output, Exception $e): void
     {
-        $response = $this->whoops->handleException($e);
+        (new ConsoleApplication)->renderException($e, $output);
+    }
 
-        return new Response($response);
+    /**
+     * Determine if the exception should be reported.
+     *
+     * @param Exception $e
+     * @return bool
+     */
+    public function shouldReport(Exception $e)
+    {
+        return in_array($e->getCode(), $this->ignoredExceptions);
     }
 }

@@ -1,23 +1,20 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types = 1);
 
-use Illuminate\Contracts\Console\Kernel;
-use Laravel\Lumen\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
+define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
-| Create The Application
+| Turn On The Lights
 |--------------------------------------------------------------------------
 |
-| First we need to get an application instance. This creates an instance
-| of the application / container and bootstraps the application so it
-| is ready to receive HTTP / Console requests from the environment.
+| We need to illuminate PHP development, so let us turn on the lights.
+| This bootstraps the framework and gets it ready for use, then it
+| will load up this application so that we can run it and send
+| the responses back to the browser and delight our users.
 |
 */
 
-/** @var Application $app */
 $app = require __DIR__ . '/bootstrap/app.php';
 
 /*
@@ -31,7 +28,25 @@ $app = require __DIR__ . '/bootstrap/app.php';
 |
 */
 
-/** @var Kernel $kernel */
-$kernel = $app->make(Kernel::class);
+/** @var Illuminate\Foundation\Console\Kernel $kernel */
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
 
-exit($kernel->handle(new ArgvInput, new ConsoleOutput));
+$status = $kernel->handle(
+    $input = new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
+
+/*
+|--------------------------------------------------------------------------
+| Shutdown The Application
+|--------------------------------------------------------------------------
+|
+| Once Artisan has finished running, we will fire off the shutdown events
+| so that any final work may be done by the application before we shut
+| down the process. This is the last thing to happen to the request.
+|
+*/
+
+$kernel->terminate($input, $status);
+
+exit($status);

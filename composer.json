@@ -2,51 +2,61 @@
   "name": "vantoozz/organisations-test",
   "description": "Organisations test",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Ivan Nikitin",
+      "email": "vantoozz@gmail.com"
+    }
+  ],
   "require": {
-    "php": ">=5.6.0",
-    "laravel/lumen-framework": "~5",
-    "doctrine/dbal": "~2",
-    "illuminate/redis": "~5",
-    "predis/predis": "~1",
-    "vlucas/phpdotenv": "~2",
-    "filp/whoops": "~2",
+    "php": "^7.3",
+    "ext-json": "*",
+    "laravel/framework": "~5.8",
+    "sentry/sentry": "~1",
     "roave/security-advisories": "dev-master"
   },
   "require-dev": {
-    "ext-pdo_sqlite": "*",
-    "fzaninotto/faker": "~1",
-    "phploc/phploc": "~3",
-    "phpunit/phpunit": "~5",
-    "squizlabs/php_codesniffer": "~2",
-    "sebastian/phpcpd": "~2",
+    "jakub-onderka/php-parallel-lint": "~1",
+    "phploc/phploc": "~4",
     "phpmd/phpmd": "~2",
-    "block8/php-docblock-checker": "~1",
-    "jakub-onderka/php-parallel-lint": "~0"
+    "phpstan/phpstan": "~0",
+    "phpunit/phpunit": "~7",
+    "povils/phpmnd": "~2",
+    "sebastian/phpcpd": "~4",
+    "squizlabs/php_codesniffer": "~3",
+    "vantoozz/phpcdm": "~1"
   },
   "autoload": {
     "psr-4": {
       "App\\": "src/"
-    },
-    "classmap": [
-      "database/",
-      "tests/TestCase.php"
-    ]
+    }
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\": "tests/unit",
-      "App\\Tests\\Integration\\": "tests/integration"
+      "App\\": "tests/"
     }
   },
-  "config": {
-    "preferred-install": "dist"
+  "extra": {
+    "laravel": {
+      "dont-discover": [
+        "laravel/nexmo-notification-channel",
+        "laravel/slack-notification-channel"
+      ]
+    }
   },
   "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+    ],
     "post-install-cmd": [
-      "bash bin/setup.sh"
+      "bash .githooks/setup.sh"
     ],
     "post-update-cmd": [
-      "bash bin/setup.sh"
+      "bash .githooks/setup.sh"
     ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "optimize-autoloader": true
   }
 }

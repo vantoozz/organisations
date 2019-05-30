@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Exceptions;
 
@@ -6,7 +6,6 @@ namespace App\Exceptions;
  * Class AppException
  * @package App\Exceptions
  */
-class AppException extends \Exception
+abstract class AppException extends \Exception
 {
-
 }

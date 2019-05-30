@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace App\Exceptions;
 
@@ -6,7 +6,6 @@ namespace App\Exceptions;
  * Class InvalidArgumentException
  * @package App\Exceptions
  */
-class InvalidArgumentException extends AppException
+final class InvalidArgumentException extends AppException
 {
-
 }

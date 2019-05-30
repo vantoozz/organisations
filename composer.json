@@ -11,8 +11,11 @@
   "require": {
     "php": "^7.3",
     "ext-json": "*",
+    "ext-pdo": "*",
     "laravel/framework": "~5.8",
     "sentry/sentry": "~1",
+    "doctrine/dbal": "~2",
+    "fzaninotto/faker": "~1",
     "roave/security-advisories": "dev-master"
   },
   "require-dev": {

@@ -148,6 +148,7 @@ return [
 //        Illuminate\Auth\AuthServiceProvider::class,
 //
         Illuminate\Cache\CacheServiceProvider::class,
+        Illuminate\Database\DatabaseServiceProvider::class,
 //        Illuminate\Cookie\CookieServiceProvider::class,
 //        Illuminate\Encryption\EncryptionServiceProvider::class,
 //        Illuminate\Filesystem\FilesystemServiceProvider::class,
@@ -162,5 +163,7 @@ return [
 
         VersionServiceProvider::class,
         ServiceProviders\MonologServiceProvider::class,
+        ServiceProviders\DBALConnectionServiceProvider::class,
+        ServiceProviders\FakerServiceProvider::class,
     ],
 ];
